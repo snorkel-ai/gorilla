@@ -1,0 +1,2 @@
+Rank,Model,Non_Live Overall Acc,AST Summary,Simple AST,Python Simple AST,Java Simple AST,JavaScript Simple AST,Multiple AST,Parallel AST,Parallel Multiple AST,Irrelevance Detection
+1,Marin-8b-Instruct (Prompt),70.52%,65.44%,53.25%,70.75%,49.00%,40.00%,82.00%,49.50%,77.00%,90.83%
