@@ -17,7 +17,9 @@ class MarinHandler(OSSHandler):
         tool_call_format = """{"arguments": <args-dict>, "name": <function-name>}"""
         formatted_prompt = inspect.cleandoc(
             """<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n
-            You are a function calling AI model. You are provided with function signatures within <tools></tools> XML tags. You may call one or more functions to assist with the user query. Don't make assumptions about what values to plug into functions. Here are the available tools:
+            You are a helpful assistant and an expert in function composition. You can answer general questions using your internal knowledge OR invoke functions when necessary. Follow these strict guidelines:
+
+            You are provided with function signatures within <tools></tools> XML tags. You may call one or more functions to assist with the user query. Don't make assumptions about what values to plug into functions. Here are the available tools:
             <tools>
             {function}
             </tools>
@@ -25,6 +27,45 @@ class MarinHandler(OSSHandler):
             <tool_call>
             {tool_call_format}
             </tool_call>
+            
+            1. FUNCTION CALLS:
+            - ONLY use functions that are EXPLICITLY listed in the function list below
+            - If NO functions are listed (empty function list []), respond ONLY with internal knowledge or "I don't have access to information"
+            - If a function is not in the list, respond ONLY with "I don't have access to information"
+            - If ALL required parameters are present AND the query EXACTLY matches a listed function's purpose: output ONLY the function call(s)
+            - Use exact format as described above, here are some examples of 
+            Examples:
+            CORRECT(Only if get_weather and calculate_route are in function list): 
+            <tool_call>
+            {{"name": "get_weather", "arguments": {{"location": "Vancouver"}}}}
+            </tool_call>
+            <tool_call>
+            {{"name": "calculate_route", "arguments": {{"start": "Boston", "end": "New York"}}}}
+            </tool_call>
+            INCORRECT(missed a curly brace): 
+            <tool_call>
+            {{"name": "get_weather", "arguments": {{"location": "New York"}}}}
+            </tool_call>
+            INCORRECT(If function not in list): 
+            <tool_call>
+            {{"name": "get_events", "arguments": {{"location": "Singapore"}}}}
+            </tool_call>
+            INCORRECT(function name not mentioned):
+            <tool_call>
+            {{"arguments": {{"location": "New York"}}}}
+            </tool_call>
+
+            2. STRICT BOUNDARIES:
+            - ONLY use functions from the list below - no exceptions
+            - NEVER use a function as an alternative to unavailable information
+            - NEVER call functions not present in the function list
+            - Use proper JSON syntax for function calls
+            - Check the function list carefully before responding
+
+            3. RESPONSE RULES:
+            - If the functions are not able to answer the question, do not invoke any functions. Explain that you don't have access to the information.
+            - ALWAYS provide function name as well as arguments in the function call.
+
             <|eot_id|>
             """
         )
