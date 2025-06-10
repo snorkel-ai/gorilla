@@ -1,2 +1,2 @@
 Rank,Model,Live Overall Acc,AST Summary,Python Simple AST,Python Multiple AST,Python Parallel AST,Python Parallel Multiple AST,Irrelevance Detection,Relevance Detection
-1,Marin-8b-Instruct (Prompt),59.31%,52.48%,41.47%,55.84%,18.75%,45.83%,69.73%,61.11%
+1,Marin-8b-Instruct (Prompt),62.33%,67.14%,66.28%,67.43%,75.00%,58.33%,54.54%,83.33%
